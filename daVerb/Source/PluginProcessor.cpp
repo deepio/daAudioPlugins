@@ -138,6 +138,14 @@ void DaVerbAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&
     ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
+    
+    mReverb1Parameters.roomSize = *mParameterTree.getRawParameterValue(ROOM_SIZE_ID);
+    mReverb1Parameters.damping = 0.9f;
+    mReverb1Parameters.freezeMode = 0.0f;
+    mReverb1Parameters.width = 0.5f;
+    mReverb1Parameters.wetLevel = 0.6f;
+    mReverb1Parameters.dryLevel = 0.2f;
+    mReverb1.setParameters(mReverb1Parameters);
 
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
@@ -154,11 +162,13 @@ void DaVerbAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
+    if (totalNumInputChannels == 1)
     {
-        auto* channelData = buffer.getWritePointer (channel);
-
-        // ..do something to the data...
+        mReverb1.processMono(buffer.getWritePointer(0), buffer.getNumSamples());
+    }
+    else if (totalNumInputChannels == 2)
+    {
+        mReverb1.processStereo(buffer.getWritePointer(0), buffer.getWritePointer(1), buffer.getNumSamples());
     }
 }
 

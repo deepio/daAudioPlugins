@@ -62,6 +62,8 @@ public:
     AudioProcessorValueTreeState mParameterTree;
 
 private:
+    Reverb mReverb1;
+    Reverb::Parameters mReverb1Parameters;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DaVerbAudioProcessor)
 };
