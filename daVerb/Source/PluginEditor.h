@@ -27,6 +27,9 @@ public:
     void resized() override;
 
 private:
+    Slider roomSizeSlider;
+    Label roomSizeLabel;
+    
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     DaVerbAudioProcessor& processor;
