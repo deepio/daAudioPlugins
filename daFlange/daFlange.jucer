@@ -5,8 +5,6 @@
               cppLanguageStandard="14">
   <MAINGROUP id="wDIlZ5" name="daFlange">
     <GROUP id="{35DF0FE3-E97F-66AA-5F4E-C4D9A4242F07}" name="Source">
-      <FILE id="Is5g5B" name="CircularBuffer.h" compile="0" resource="0"
-            file="Source/CircularBuffer.h"/>
       <FILE id="e4MQNP" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="u0z99Z" name="PluginProcessor.h" compile="0" resource="0"
