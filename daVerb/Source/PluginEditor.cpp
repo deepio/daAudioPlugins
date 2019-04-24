@@ -28,6 +28,7 @@ DaVerbAudioProcessorEditor::DaVerbAudioProcessorEditor (DaVerbAudioProcessor& p)
     roomSizeLabel.setText("Room Size", dontSendNotification);
     roomSizeLabel.setJustificationType(Justification::centred);
     roomSizeLabel.attachToComponent(&roomSizeSlider, false);
+    roomSizeAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.mParameterTree, ROOM_SIZE_ID, roomSizeSlider);
 }
 
 DaVerbAudioProcessorEditor::~DaVerbAudioProcessorEditor()

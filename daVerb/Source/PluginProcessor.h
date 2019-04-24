@@ -12,6 +12,9 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
+#define ROOM_SIZE_ID "roomSize"
+#define ROOM_SIZE_NAME "Room Size"
+
 //==============================================================================
 /**
 */
@@ -54,6 +57,9 @@ public:
     //==============================================================================
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+    
+    //==============================================================================
+    AudioProcessorValueTreeState mParameterTree;
 
 private:
     //==============================================================================

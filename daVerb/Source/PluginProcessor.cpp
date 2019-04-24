@@ -22,6 +22,10 @@ DaVerbAudioProcessor::DaVerbAudioProcessor()
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
                        )
+,mParameterTree(*this, nullptr, "rPARAMETERS",
+{
+    std::make_unique<AudioParameterFloat>(ROOM_SIZE_ID, ROOM_SIZE_NAME, 0.0f, 1.0f, 0.8f)
+})
 #endif
 {
 }
