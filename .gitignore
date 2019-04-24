@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# Mac Users (xcode)
+.DS_Store
+*.xcuserstate
