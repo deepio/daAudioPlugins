@@ -25,6 +25,10 @@ DaVerbAudioProcessor::DaVerbAudioProcessor()
 ,mParameterTree(*this, nullptr, "rPARAMETERS",
 {
     std::make_unique<AudioParameterFloat>(ROOM_SIZE_ID, ROOM_SIZE_NAME, 0.0f, 1.0f, 0.8f)
+    ,std::make_unique<AudioParameterFloat>(DAMPING_ID, DAMPING_NAME, 0.0f, 1.0f, 0.8f)
+    ,std::make_unique<AudioParameterFloat>(WIDTH_ID, WIDTH_NAME, 0.0f, 1.0f, 0.8f)
+    ,std::make_unique<AudioParameterFloat>(WET_LEVEL_ID, WET_LEVEL_NAME, 0.0f, 1.0f, 0.8f)
+    ,std::make_unique<AudioParameterFloat>(DRY_LEVEL_ID, DRY_LEVEL_NAME, 0.0f, 1.0f, 0.8f)
 })
 #endif
 {
@@ -138,13 +142,13 @@ void DaVerbAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&
     ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
-    
+
     mReverb1Parameters.roomSize = *mParameterTree.getRawParameterValue(ROOM_SIZE_ID);
-    mReverb1Parameters.damping = 0.9f;
+    mReverb1Parameters.damping = *mParameterTree.getRawParameterValue(DAMPING_ID);
     mReverb1Parameters.freezeMode = 0.0f;
-    mReverb1Parameters.width = 0.5f;
-    mReverb1Parameters.wetLevel = 0.6f;
-    mReverb1Parameters.dryLevel = 0.2f;
+    mReverb1Parameters.width = *mParameterTree.getRawParameterValue(WIDTH_ID);
+    mReverb1Parameters.wetLevel = *mParameterTree.getRawParameterValue(WET_LEVEL_ID);
+    mReverb1Parameters.dryLevel = *mParameterTree.getRawParameterValue(DRY_LEVEL_ID);
     mReverb1.setParameters(mReverb1Parameters);
 
     // In case we have more outputs than inputs, this code clears any output

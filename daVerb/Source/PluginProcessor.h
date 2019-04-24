@@ -14,6 +14,14 @@
 
 #define ROOM_SIZE_ID "roomSize"
 #define ROOM_SIZE_NAME "Room Size"
+#define DAMPING_ID "damping"
+#define DAMPING_NAME "Damping"
+#define WIDTH_ID "width"
+#define WIDTH_NAME "Width"
+#define WET_LEVEL_ID "wetLevel"
+#define WET_LEVEL_NAME "Wet"
+#define DRY_LEVEL_ID "drySize"
+#define DRY_LEVEL_NAME "Dry"
 
 //==============================================================================
 /**
@@ -57,7 +65,7 @@ public:
     //==============================================================================
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
-    
+
     //==============================================================================
     AudioProcessorValueTreeState mParameterTree;
 

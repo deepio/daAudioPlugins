@@ -30,7 +30,23 @@ private:
     Slider roomSizeSlider;
     Label roomSizeLabel;
     std::unique_ptr <AudioProcessorValueTreeState::SliderAttachment> roomSizeAttachment;
-    
+
+    Slider dampingSlider;
+    Label dampingLabel;
+    std::unique_ptr <AudioProcessorValueTreeState::SliderAttachment> dampingAttachment;
+
+    Slider widthSlider;
+    Label widthLabel;
+    std::unique_ptr <AudioProcessorValueTreeState::SliderAttachment> widthAttachment;
+
+    Slider wetLevelSlider;
+    Label wetLevelLabel;
+    std::unique_ptr <AudioProcessorValueTreeState::SliderAttachment> wetLevelAttachment;
+
+    Slider dryLevelSlider;
+    Label dryLevelLabel;
+    std::unique_ptr <AudioProcessorValueTreeState::SliderAttachment> dryLevelAttachment;
+
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     DaVerbAudioProcessor& processor;
