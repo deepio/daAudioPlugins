@@ -159,7 +159,29 @@ void DaFlangeAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffe
         const float* bufferData = buffer.getReadPointer(channel);
         const float* delayBufferData = mDelayBuffer.getReadPointer(channel);
 
-        // ..do something to the data...
+        fillDelayBuffer(
+          channel
+          ,bufferLength
+          ,delayBufferLength
+          ,bufferData
+          ,0.8f // input gain
+          ,0.8f // output gain
+        );
+        fetchDelayBuffer(
+          buffer
+          ,channel
+          ,bufferLength
+          ,delayBufferLength
+          ,delayBufferData
+        );
+        feedbackDelay(
+          channel
+          ,bufferLength
+          ,delayBufferLength
+          ,dryChannelData
+          ,0.8f // input gain
+          ,0.8f // output gain
+        );
     }
     
     mWritePosition += bufferLength;
