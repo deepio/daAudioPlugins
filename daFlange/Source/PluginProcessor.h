@@ -4,6 +4,8 @@
     This file was auto-generated!
 
     It contains the basic framework code for a JUCE plugin processor.
+    Same circular buffer as:
+      https://github.com/ffAudio/ffTapeDelay/blob/2ef785c72acbbb0b21dfc9b2b85f3ecf292f0713/Source/TapeDelayProcessor.cpp#L178-L216
 
   ==============================================================================
 */
@@ -55,6 +57,38 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    //==============================================================================
+    void fillDelayBuffer(
+      const int channel
+      ,const int bufferLength
+      ,const int delayBufferLength
+      ,const float* bufferData
+      ,const float inGain
+      ,const float outGain
+    );
+
+    void fetchDelayBuffer(
+      AudioBuffer<float>& buffer
+      ,const int channel
+      ,const int bufferLength
+      ,const int delayBufferLength
+      ,const float* delayBufferData
+    );
+
+    void feedbackDelay(
+      const int channel
+      ,const int bufferLength
+      ,const int delayBufferLength
+      ,float* dryBuffer
+      ,const float inGain
+      ,const float outGain
+    );
+    
+    //==============================================================================
+    AudioBuffer<float> mDelayBuffer;
+    int mSampleRate {44100};
+    int mWritePosition {0};
+    
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DaFlangeAudioProcessor)

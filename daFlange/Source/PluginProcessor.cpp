@@ -4,14 +4,14 @@
     This file was auto-generated!
 
     It contains the basic framework code for a JUCE plugin processor.
+    Same circular buffer as:
+        https://github.com/ffAudio/ffTapeDelay/blob/2ef785c72acbbb0b21dfc9b2b85f3ecf292f0713/Source/TapeDelayProcessor.cpp#L178-L216
 
   ==============================================================================
 */
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-
-#include "CircularBuffer.h"
 
 //==============================================================================
 DaFlangeAudioProcessor::DaFlangeAudioProcessor()
@@ -97,8 +97,10 @@ void DaFlangeAudioProcessor::changeProgramName (int index, const String& newName
 //==============================================================================
 void DaFlangeAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
+    const int delayBufferSize = 2 * (sampleRate + samplesPerBlock);
+    mSampleRate = sampleRate;
+    mDelayBuffer.setSize(getTotalNumInputChannels(), delayBufferSize, false, true);
+    lfoBuffer();
 }
 
 void DaFlangeAudioProcessor::releaseResources()
@@ -137,27 +139,24 @@ void DaFlangeAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffe
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
+    //==============================================================================
+    const int bufferLength = buffer.getNumSamples();
+    const int delayBufferLength = mDelayBuffer.getNumSamples();
+    
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
-        auto* channelData = buffer.getWritePointer (channel);
+        auto* dryChannelData = buffer.getWritePointer(channel);
+        const float* bufferData = buffer.getReadPointer(channel);
+        const float* delayBufferData = mDelayBuffer.getReadPointer(channel);
 
         // ..do something to the data...
     }
+    
+    mWritePosition += bufferLength;
+    mWritePosition %= delayBufferLength;
 }
 
 //==============================================================================
@@ -191,3 +190,65 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new DaFlangeAudioProcessor();
 }
+
+//==============================================================================
+void DaFlangeAudioProcessor::fillDelayBuffer(
+  const int channel
+  ,const int bufferLength
+  ,const int delayBufferLength
+  ,const float* bufferData
+  ,const float inGain
+  ,const float outGain
+){
+    if (delayBufferLength > bufferLength + mWritePosition)
+    {
+        mDelayBuffer.copyFromWithRamp(channel, mWritePosition, bufferData, bufferLength, inGain, outGain);
+    } else {
+        const int bufferRemaining = delayBufferLength - mWritePosition;
+        mDelayBuffer.copyFromWithRamp(channel, mWritePosition, bufferData, bufferRemaining, inGain, outGain);
+        mDelayBuffer.copyFromWithRamp(channel, 0, bufferData, bufferLength - bufferRemaining, inGain, outGain);
+    }
+}
+
+void DaFlangeAudioProcessor::fetchDelayBuffer(
+  AudioBuffer<float>& buffer
+  ,const int channel
+  ,const int bufferLength
+  ,const int delayBufferLength
+  ,const float* delayBufferData
+){
+    auto currentSample = static_cast<float>(std::sin(currentAngle));
+    currentAngle += angleDelta;
+    float delayTime = *mParameterTree.getRawParameterValue(TIME_ID) + ((*mParameterTree.getRawParameterValue(TIME_ID) * 0.05) * currentSample);
+    const int readPosition = static_cast<int> (delayBufferLength + mWritePosition - (mSampleRate * delayTime / 1000.0f)) % delayBufferLength;
+
+    if (delayBufferLength > bufferLength + readPosition)
+    {
+        buffer.copyFrom(channel, 0, delayBufferData + readPosition, bufferLength);
+    } else {
+        const int bufferRemaining = delayBufferLength - readPosition;
+        buffer.copyFrom(channel, 0, delayBufferData + readPosition, bufferRemaining);
+        buffer.copyFrom(channel, bufferRemaining, delayBufferData, bufferLength - bufferRemaining);
+    }
+}
+
+void DaFlangeAudioProcessor::feedbackDelay(
+  const int channel
+  ,const int bufferLength
+  ,const int delayBufferLength
+  ,float* dryBuffer
+  ,const float inGain
+  ,const float outGain
+){
+    if (delayBufferLength > bufferLength + mWritePosition)
+    {
+        //Copy the main signal to the delayed singal, and the delayed signal with the main signal gets put out of the speakers,
+        // instead of the other way around.
+        mDelayBuffer.addFromWithRamp(channel, mWritePosition, dryBuffer, bufferLength, inGain, outGain);
+    } else {
+        const int bufferRemaining = delayBufferLength - mWritePosition;
+        mDelayBuffer.addFromWithRamp(channel, bufferRemaining, dryBuffer, bufferRemaining, inGain, outGain);
+        mDelayBuffer.addFromWithRamp(channel, 0, dryBuffer, bufferLength - bufferRemaining, inGain, outGain);
+    }
+}
+
