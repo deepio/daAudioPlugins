@@ -31,18 +31,12 @@ DaVerbAudioProcessor::DaVerbAudioProcessor()
     ,std::make_unique<AudioParameterFloat>(DRY_LEVEL_ID, DRY_LEVEL_NAME, 0.0f, 1.0f, 0.8f)
 })
 #endif
-{
-}
+{}
 
-DaVerbAudioProcessor::~DaVerbAudioProcessor()
-{
-}
+DaVerbAudioProcessor::~DaVerbAudioProcessor() {}
 
 //==============================================================================
-const String DaVerbAudioProcessor::getName() const
-{
-    return JucePlugin_Name;
-}
+const String DaVerbAudioProcessor::getName() const {return JucePlugin_Name;}
 
 bool DaVerbAudioProcessor::acceptsMidi() const
 {
@@ -71,47 +65,25 @@ bool DaVerbAudioProcessor::isMidiEffect() const
    #endif
 }
 
-double DaVerbAudioProcessor::getTailLengthSeconds() const
-{
-    return 0.0;
-}
-
-int DaVerbAudioProcessor::getNumPrograms()
-{
-    return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
-                // so this should be at least 1, even if you're not really implementing programs.
-}
-
-int DaVerbAudioProcessor::getCurrentProgram()
-{
-    return 0;
-}
-
-void DaVerbAudioProcessor::setCurrentProgram (int index)
-{
-}
-
-const String DaVerbAudioProcessor::getProgramName (int index)
-{
-    return {};
-}
-
-void DaVerbAudioProcessor::changeProgramName (int index, const String& newName)
-{
-}
+double DaVerbAudioProcessor::getTailLengthSeconds() const {return 0.0;}
+int DaVerbAudioProcessor::getNumPrograms() {return 1;}
+int DaVerbAudioProcessor::getCurrentProgram() {return 0;}
+void DaVerbAudioProcessor::setCurrentProgram (int index) {}
+const String DaVerbAudioProcessor::getProgramName (int index) {return {};}
+void DaVerbAudioProcessor::changeProgramName (int index, const String& newName) {}
 
 //==============================================================================
 void DaVerbAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+    auto channels = static_cast<uint32> (jmin (getMainBusNumInputChannels(), getMainBusNumOutputChannels()));
+    dsp::ProcessSpec spec {sampleRate, static_cast<uint32> (samplesPerBlock), channels};
+    updateParameters();
+    reset();
 }
 
-void DaVerbAudioProcessor::releaseResources()
-{
-    // When playback stops, you can use this as an opportunity to free up any
-    // spare memory, etc.
-}
+void DaVerbAudioProcessor::releaseResources() {}
 
 #ifndef JucePlugin_PreferredChannelConfigurations
 bool DaVerbAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
@@ -157,8 +129,12 @@ void DaVerbAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&
     // This is here to avoid people getting screaming feedback
     // when they first compile a plugin, but obviously you don't need to keep
     // this code if your algorithm always overwrites all the output channels.
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+//    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+    for (auto i = jmin(2, totalNumInputChannels); i < totalNumOutputChannels; i++)
         buffer.clear (i, 0, buffer.getNumSamples());
+    
+    updateParameters();
+    dsp::AudioBlock<float> block(buffer);
 
     // This is the place where you'd normally do the guts of your plugin's
     // audio processing...
@@ -168,42 +144,69 @@ void DaVerbAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&
     // interleaved by keeping the same state.
     if (totalNumInputChannels == 1)
     {
-        mReverb1.processMono(buffer.getWritePointer(0), buffer.getNumSamples());
+        auto firstChan = block.getSingleChannelBlock(0);
+        
+        //DSP Module
+        process(dsp::ProcessContextReplacing<float> (firstChan));
+        
+        //Basic Module
+        //mReverb1.processMono(buffer.getWritePointer(0), buffer.getNumSamples());
     }
-    else if (totalNumInputChannels == 2)
+    else
     {
-        mReverb1.processStereo(buffer.getWritePointer(0), buffer.getWritePointer(1), buffer.getNumSamples());
+        //DSP Module
+        block = block.getSubsetChannelBlock(0,2);
+        process(dsp::ProcessContextReplacing<float> (block));
+        
+        //Basic Module
+        //mReverb1.processStereo(buffer.getWritePointer(0), buffer.getWritePointer(1), buffer.getNumSamples());
     }
 }
 
 //==============================================================================
-bool DaVerbAudioProcessor::hasEditor() const
-{
-    return true; // (change this to false if you choose to not supply an editor)
-}
+bool DaVerbAudioProcessor::hasEditor() const {return true;}
 
-AudioProcessorEditor* DaVerbAudioProcessor::createEditor()
-{
-    return new DaVerbAudioProcessorEditor (*this);
-}
+AudioProcessorEditor* DaVerbAudioProcessor::createEditor(){return new DaVerbAudioProcessorEditor (*this);}
 
 //==============================================================================
-void DaVerbAudioProcessor::getStateInformation (MemoryBlock& destData)
-{
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
-}
-
-void DaVerbAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
-{
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
-}
+void DaVerbAudioProcessor::getStateInformation (MemoryBlock& destData) {}
+void DaVerbAudioProcessor::setStateInformation (const void* data, int sizeInBytes) {}
 
 //==============================================================================
 // This creates new instances of the plugin..
-AudioProcessor* JUCE_CALLTYPE createPluginFilter()
+AudioProcessor* JUCE_CALLTYPE createPluginFilter() {return new DaVerbAudioProcessor();}
+
+//==============================================================================
+void DaVerbAudioProcessor::prepare (const dsp::ProcessSpec& spec)
 {
-    return new DaVerbAudioProcessor();
+    sampleRate = spec.sampleRate;
+    
+    auto& gainUp = overdrive.get<0>();
+    gainUp.setGainDecibels (24);
+
+    auto& reverbP = overdrive.get<1>();
+    reverbP.setParameters(mReverb1Parameters);
+
+    overdrive.prepare(spec);
+}
+
+void DaVerbAudioProcessor::process (const dsp::ProcessContextReplacing<float>& context)
+{
+    ScopedNoDenormals noDenormals;
+    inputVolume.process (context);
+    outputVolume.process (context);
+    mReverb1.process(context);
+}
+
+void DaVerbAudioProcessor::reset()
+{
+    overdrive.reset();
+}
+
+void DaVerbAudioProcessor::updateParameters()
+{
+    auto inputdB  = Decibels::decibelsToGain  (1.0f);
+    auto outputdB = Decibels::decibelsToGain (5.0f);
+    if (inputVolume .getGainLinear() != inputdB)     inputVolume.setGainLinear (inputdB);
+    if (outputVolume.getGainLinear() != outputdB)   outputVolume.setGainLinear (outputdB);
 }

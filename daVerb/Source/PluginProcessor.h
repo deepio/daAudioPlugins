@@ -68,10 +68,27 @@ public:
 
     //==============================================================================
     AudioProcessorValueTreeState mParameterTree;
+    
+    dsp::Reverb mReverb1;
+    dsp::Reverb::Parameters mReverb1Parameters;
+    
+    //==============================================================================
+    void prepare (const dsp::ProcessSpec& spec);
+    void process (const dsp::ProcessContextReplacing<float>& context);
+    void reset() override;
+    void updateParameters();
+    
+    using GainProcessor   = dsp::Gain<float>;
+    using ReverbProcessor = dsp::Reverb;
 
+    dsp::ProcessorChain<GainProcessor, ReverbProcessor> overdrive;
+    dsp::Gain<float> inputVolume, outputVolume;
+
+    double sampleRate = 0.0;
+    
 private:
-    Reverb mReverb1;
-    Reverb::Parameters mReverb1Parameters;
+    //Reverb mReverb1;
+    //Reverb::Parameters mReverb1Parameters;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DaVerbAudioProcessor)
 };
