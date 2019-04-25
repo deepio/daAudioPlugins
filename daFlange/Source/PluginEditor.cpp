@@ -41,6 +41,23 @@ DaFlangeAudioProcessorEditor::DaFlangeAudioProcessorEditor (DaFlangeAudioProcess
     widthLabel.attachToComponent(&widthSlider, false);
     widthAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.mParameterTree, WIDTH_ID, widthSlider);
 
+    addAndMakeVisible(intensitySlider);
+    intensitySlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    intensitySlider.setTextBoxStyle(Slider::TextBoxBelow, false, sliderBoxWidth, sliderBoxHeight);
+    addAndMakeVisible(intensityLabel);
+    intensityLabel.setText(INTENSITY_NAME, dontSendNotification);
+    intensityLabel.setJustificationType(Justification::centred);
+    intensityLabel.attachToComponent(&intensitySlider, false);
+    intensityAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.mParameterTree, INTENSITY_ID, intensitySlider);
+
+    addAndMakeVisible(wetDrySlider);
+    wetDrySlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    wetDrySlider.setTextBoxStyle(Slider::TextBoxBelow, false, sliderBoxWidth, sliderBoxHeight);
+    addAndMakeVisible(wetDryLabel);
+    wetDryLabel.setText(WET_DRY_NAME, dontSendNotification);
+    wetDryLabel.setJustificationType(Justification::centred);
+    wetDryLabel.attachToComponent(&wetDrySlider, false);
+    wetDryAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.mParameterTree, WET_DRY_ID, wetDrySlider);
 }
 
 DaFlangeAudioProcessorEditor::~DaFlangeAudioProcessorEditor()
@@ -60,4 +77,6 @@ void DaFlangeAudioProcessorEditor::resized()
     Rectangle<int> area(10, 30, getWidth(), getHeight() - 60);
     feedbackSlider.setBounds(area.removeFromLeft(buttonSize));
     widthSlider.setBounds(area.removeFromLeft(buttonSize));
+    intensitySlider.setBounds(area.removeFromLeft(buttonSize));
+    wetDrySlider.setBounds(area.removeFromLeft(buttonSize));
 }

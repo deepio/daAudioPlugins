@@ -18,6 +18,10 @@
 #define FEEDBACK_NAME "Feedback"
 #define WIDTH_ID "widthValue"
 #define WIDTH_NAME "Width"
+#define INTENSITY_ID "intensityValue"
+#define INTENSITY_NAME "Intensity"
+#define WET_DRY_ID "wetDryValue"
+#define WET_DRY_NAME "Dry/Wet/Xplode"
 
 //==============================================================================
 /**

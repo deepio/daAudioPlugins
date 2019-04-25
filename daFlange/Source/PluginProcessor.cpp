@@ -28,6 +28,8 @@ DaFlangeAudioProcessor::DaFlangeAudioProcessor()
 {
     std::make_unique<AudioParameterFloat>(FEEDBACK_ID, FEEDBACK_NAME, 0.0f, 1.0f, 0.1028f)
     ,std::make_unique<AudioParameterFloat>(WIDTH_ID, WIDTH_NAME, 0.0f, 1.0f, 0.25f)
+    ,std::make_unique<AudioParameterFloat>(INTENSITY_ID, INTENSITY_NAME, 0.0f, 2.0f, 0.0f)
+    ,std::make_unique<AudioParameterFloat>(WET_DRY_ID, WET_DRY_NAME, 0.0f, 1.0f, 0.5f)
 })
 #endif
 {
@@ -164,8 +166,8 @@ void DaFlangeAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffe
           ,bufferLength
           ,delayBufferLength
           ,bufferData
-          ,0.8f // input gain
-          ,0.8f // output gain
+          ,1.15 - *mParameterTree.getRawParameterValue(WET_DRY_ID)
+          ,1.15 - *mParameterTree.getRawParameterValue(WET_DRY_ID)
         );
         fetchDelayBuffer(
           buffer
@@ -179,8 +181,8 @@ void DaFlangeAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffe
           ,bufferLength
           ,delayBufferLength
           ,dryChannelData
-          ,0.8f // input gain
-          ,0.8f // output gain
+          ,*mParameterTree.getRawParameterValue(WET_DRY_ID)
+          ,*mParameterTree.getRawParameterValue(WET_DRY_ID)
         );
     }
     
@@ -252,8 +254,9 @@ void DaFlangeAudioProcessor::fetchDelayBuffer(
     float currentTime = ((*mParameterTree.getRawParameterValue(FEEDBACK_ID) * 195.0f) + 30.0f);
     float currentWidth = (*mParameterTree.getRawParameterValue(WIDTH_ID) * 0.2f) * *mParameterTree.getRawParameterValue(INTENSITY_ID);
     currentAngle += angleDelta;
-    float delayTime = *mParameterTree.getRawParameterValue(TIME_ID) + ((*mParameterTree.getRawParameterValue(TIME_ID) * 0.05) * currentLFOSample);
-    const int readPosition = static_cast<int> (delayBufferLength + mWritePosition - (mSampleRate * delayTime / 1000.0f)) % delayBufferLength;
+
+    float delayTime = currentTime + ((currentTime * currentWidth) * currentLFOSample) * (- *mParameterTree.getRawParameterValue(WET_DRY_ID));
+    const int readPosition = static_cast<int> (delayBufferLength + mWritePosition - (mSampleRate * delayTime * 0.001f)) % delayBufferLength;
 
     if (delayBufferLength > bufferLength + readPosition)
     {

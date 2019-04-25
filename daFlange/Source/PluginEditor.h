@@ -33,6 +33,14 @@ public:
     Slider widthSlider;
     Label widthLabel;
     std::unique_ptr <AudioProcessorValueTreeState::SliderAttachment> widthAttachment;
+    
+    Slider intensitySlider;
+    Label intensityLabel;
+    std::unique_ptr <AudioProcessorValueTreeState::SliderAttachment> intensityAttachment;
+    
+    Slider wetDrySlider;
+    Label wetDryLabel;
+    std::unique_ptr <AudioProcessorValueTreeState::SliderAttachment> wetDryAttachment;
 
 private:
     // This reference is provided as a quick way for your editor to
