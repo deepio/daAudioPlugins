@@ -185,11 +185,9 @@ void DaFlangeAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffe
           ,*mParameterTree.getRawParameterValue(WET_DRY_ID)
         );
     }
-    
+
     mWritePosition += bufferLength;
     mWritePosition %= delayBufferLength;
-
-//    std::cout << *mParameterTree.getRawParameterValue(TIME_ID) << std::endl;
 }
 
 //==============================================================================
