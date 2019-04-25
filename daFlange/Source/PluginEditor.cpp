@@ -17,7 +17,7 @@ DaFlangeAudioProcessorEditor::DaFlangeAudioProcessorEditor (DaFlangeAudioProcess
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (400, 300);
+    setSize (340, 300);
 
     const int sliderBoxWidth = 50;
     const int sliderBoxHeight= 20;
