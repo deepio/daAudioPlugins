@@ -105,7 +105,7 @@ void DaFlangeAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlo
     const int delayBufferSize = 2 * (sampleRate + samplesPerBlock);
     mSampleRate = sampleRate;
     mDelayBuffer.setSize(getTotalNumInputChannels(), delayBufferSize, false, true);
-    lfoBuffer();
+    updateSineBuffer();
 }
 
 void DaFlangeAudioProcessor::releaseResources()
@@ -150,6 +150,8 @@ void DaFlangeAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffe
     //==============================================================================
     const int bufferLength = buffer.getNumSamples();
     const int delayBufferLength = mDelayBuffer.getNumSamples();
+    
+    updateSineBuffer();
     
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
@@ -224,9 +226,9 @@ void DaFlangeAudioProcessor::fetchDelayBuffer(
   ,const int delayBufferLength
   ,const float* delayBufferData
 ){
-    auto currentSample = static_cast<float>(std::sin(currentAngle));
+    auto currentLFOSample = static_cast<float>(std::sin(currentAngle));
     currentAngle += angleDelta;
-    float delayTime = *mParameterTree.getRawParameterValue(TIME_ID) + ((*mParameterTree.getRawParameterValue(TIME_ID) * 0.05) * currentSample);
+    float delayTime = *mParameterTree.getRawParameterValue(TIME_ID) + ((*mParameterTree.getRawParameterValue(TIME_ID) * 0.05) * currentLFOSample);
     const int readPosition = static_cast<int> (delayBufferLength + mWritePosition - (mSampleRate * delayTime / 1000.0f)) % delayBufferLength;
 
     if (delayBufferLength > bufferLength + readPosition)
@@ -259,3 +261,8 @@ void DaFlangeAudioProcessor::feedbackDelay(
     }
 }
 
+void DaFlangeAudioProcessor::updateSineBuffer()
+{
+    auto cyclesPerSample = *mParameterTree.getRawParameterValue(LFO_FREQUENCY_ID) / mSampleRate;
+    angleDelta = cyclesPerSample * 2.0 * MathConstants<double>::pi;
+}

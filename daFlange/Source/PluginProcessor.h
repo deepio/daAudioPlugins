@@ -88,14 +88,19 @@ public:
       ,const float inGain
       ,const float outGain
     );
-    
+
+    void updateSineBuffer();
+
     //==============================================================================
     AudioProcessorValueTreeState mParameterTree;
-    
+
     AudioBuffer<float> mDelayBuffer;
     int mSampleRate {44100};
     int mWritePosition {0};
-    
+
+    float currentAngle = 0.0;
+    float angleDelta = 0.0;
+
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DaFlangeAudioProcessor)
