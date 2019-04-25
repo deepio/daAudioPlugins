@@ -15,9 +15,7 @@
 DaFlangeAudioProcessorEditor::DaFlangeAudioProcessorEditor (DaFlangeAudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p)
 {
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
-    setSize (340, 300);
+    setSize(640, 399);
 
     const int sliderBoxWidth = 50;
     const int sliderBoxHeight= 20;
@@ -67,14 +65,14 @@ DaFlangeAudioProcessorEditor::~DaFlangeAudioProcessorEditor()
 //==============================================================================
 void DaFlangeAudioProcessorEditor::paint (Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (Colours::black);
+    Image background = ImageCache::getFromMemory(BinaryData::bg2_jpg, BinaryData::bg2_jpgSize);
+    g.drawImageAt(background, 0, 0);
 }
 
 void DaFlangeAudioProcessorEditor::resized()
 {
-    const int buttonSize = 80;
-    Rectangle<int> area(10, 30, getWidth(), getHeight() - 60);
+    const int buttonSize = 110;
+    Rectangle<int> area(180, 210, getWidth(), getHeight() - 240);
     feedbackSlider.setBounds(area.removeFromLeft(buttonSize));
     widthSlider.setBounds(area.removeFromLeft(buttonSize));
     intensitySlider.setBounds(area.removeFromLeft(buttonSize));
