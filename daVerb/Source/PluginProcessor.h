@@ -81,7 +81,7 @@ public:
     using GainProcessor   = dsp::Gain<float>;
     using ReverbProcessor = dsp::Reverb;
 
-    dsp::ProcessorChain<GainProcessor, ReverbProcessor> overdrive;
+    dsp::ProcessorChain<GainProcessor, ReverbProcessor> reverbChain;
     dsp::Gain<float> inputVolume, outputVolume;
 
     double sampleRate = 0.0;

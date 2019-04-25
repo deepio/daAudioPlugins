@@ -181,26 +181,25 @@ void DaVerbAudioProcessor::prepare (const dsp::ProcessSpec& spec)
 {
     sampleRate = spec.sampleRate;
     
-    auto& gainUp = overdrive.get<0>();
+    auto& gainUp = reverbChain.get<0>();
     gainUp.setGainDecibels (24);
 
-    auto& reverbP = overdrive.get<1>();
+    auto& reverbP = reverbChain.get<1>();
     reverbP.setParameters(mReverb1Parameters);
-
-    overdrive.prepare(spec);
+    reverbChain.prepare(spec);
 }
 
 void DaVerbAudioProcessor::process (const dsp::ProcessContextReplacing<float>& context)
 {
     ScopedNoDenormals noDenormals;
     inputVolume.process (context);
-    outputVolume.process (context);
     mReverb1.process(context);
+    outputVolume.process (context);
 }
 
 void DaVerbAudioProcessor::reset()
 {
-    overdrive.reset();
+    reverbChain.reset();
 }
 
 void DaVerbAudioProcessor::updateParameters()
