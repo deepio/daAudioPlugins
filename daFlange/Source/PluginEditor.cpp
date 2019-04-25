@@ -23,25 +23,23 @@ DaFlangeAudioProcessorEditor::DaFlangeAudioProcessorEditor (DaFlangeAudioProcess
     const int sliderBoxHeight= 20;
 
 
-    addAndMakeVisible(timeSlider);
-    timeSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
-    timeSlider.setTextBoxStyle(Slider::TextBoxBelow, false, sliderBoxWidth, sliderBoxHeight);
-    addAndMakeVisible(timeLabel);
-    timeLabel.setText(TIME_NAME, dontSendNotification);
-    timeLabel.setJustificationType(Justification::centred);
-    timeLabel.attachToComponent(&timeSlider, false);
-    addAndMakeVisible(timeLabel);
-    timeAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.mParameterTree, TIME_ID, timeSlider);
+    addAndMakeVisible(feedbackSlider);
+    feedbackSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    feedbackSlider.setTextBoxStyle(Slider::TextBoxBelow, false, sliderBoxWidth, sliderBoxHeight);
+    addAndMakeVisible(feedbackLabel);
+    feedbackLabel.setText(FEEDBACK_NAME, dontSendNotification);
+    feedbackLabel.setJustificationType(Justification::centred);
+    feedbackLabel.attachToComponent(&feedbackSlider, false);
+    feedbackAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.mParameterTree, FEEDBACK_ID, feedbackSlider);
 
-    addAndMakeVisible(lfoFrequencySlider);
-    lfoFrequencySlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
-    lfoFrequencySlider.setTextBoxStyle(Slider::TextBoxBelow, false, sliderBoxWidth, sliderBoxHeight);
-    addAndMakeVisible(lfoFrequencyLabel);
-    lfoFrequencyLabel.setText(LFO_FREQUENCY_NAME, dontSendNotification);
-    lfoFrequencyLabel.setJustificationType(Justification::centred);
-    lfoFrequencyLabel.attachToComponent(&lfoFrequencySlider, false);
-    addAndMakeVisible(lfoFrequencyLabel);
-    lfoFrequencyAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.mParameterTree, LFO_FREQUENCY_ID, lfoFrequencySlider);
+    addAndMakeVisible(widthSlider);
+    widthSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    widthSlider.setTextBoxStyle(Slider::TextBoxBelow, false, sliderBoxWidth, sliderBoxHeight);
+    addAndMakeVisible(widthLabel);
+    widthLabel.setText(WIDTH_NAME, dontSendNotification);
+    widthLabel.setJustificationType(Justification::centred);
+    widthLabel.attachToComponent(&widthSlider, false);
+    widthAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.mParameterTree, WIDTH_ID, widthSlider);
 
 }
 
@@ -58,10 +56,8 @@ void DaFlangeAudioProcessorEditor::paint (Graphics& g)
 
 void DaFlangeAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
     const int buttonSize = 80;
     Rectangle<int> area(10, 30, getWidth(), getHeight() - 60);
-    timeSlider.setBounds(area.removeFromLeft(buttonSize));
-    lfoFrequencySlider.setBounds(area.removeFromLeft(buttonSize));
+    feedbackSlider.setBounds(area.removeFromLeft(buttonSize));
+    widthSlider.setBounds(area.removeFromLeft(buttonSize));
 }

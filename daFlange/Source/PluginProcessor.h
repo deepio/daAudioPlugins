@@ -14,10 +14,10 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-#define TIME_ID "timeValue"
-#define TIME_NAME "Time"
-#define LFO_FREQUENCY_ID "lfoFrequencyValue"
-#define LFO_FREQUENCY_NAME "LFO Frequency"
+#define FEEDBACK_ID "feedbackValue"
+#define FEEDBACK_NAME "Feedback"
+#define WIDTH_ID "widthValue"
+#define WIDTH_NAME "Width"
 
 //==============================================================================
 /**

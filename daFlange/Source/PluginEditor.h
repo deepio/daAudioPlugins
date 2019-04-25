@@ -26,13 +26,13 @@ public:
     void paint (Graphics&) override;
     void resized() override;
 
-    Slider timeSlider;
-    Label timeLabel;
-    std::unique_ptr <AudioProcessorValueTreeState::SliderAttachment> timeAttachment;
+    Slider feedbackSlider;
+    Label feedbackLabel;
+    std::unique_ptr <AudioProcessorValueTreeState::SliderAttachment> feedbackAttachment;
     
-    Slider lfoFrequencySlider;
-    Label lfoFrequencyLabel;
-    std::unique_ptr <AudioProcessorValueTreeState::SliderAttachment> lfoFrequencyAttachment;
+    Slider widthSlider;
+    Label widthLabel;
+    std::unique_ptr <AudioProcessorValueTreeState::SliderAttachment> widthAttachment;
 
 private:
     // This reference is provided as a quick way for your editor to

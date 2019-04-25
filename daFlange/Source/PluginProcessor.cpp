@@ -26,8 +26,8 @@ DaFlangeAudioProcessor::DaFlangeAudioProcessor()
                        )
 ,mParameterTree(*this, nullptr, "flangerParameter",
 {
-    std::make_unique<AudioParameterFloat>(TIME_ID, TIME_NAME, 5.0f, 200.0f, 35.0f)
-    ,std::make_unique<AudioParameterFloat>(LFO_FREQUENCY_ID, LFO_FREQUENCY_NAME, 0.0f, 10.0f, 1.0f)
+    std::make_unique<AudioParameterFloat>(FEEDBACK_ID, FEEDBACK_NAME, 0.0f, 1.0f, 0.1028f)
+    ,std::make_unique<AudioParameterFloat>(WIDTH_ID, WIDTH_NAME, 0.0f, 1.0f, 0.25f)
 })
 #endif
 {
@@ -150,9 +150,9 @@ void DaFlangeAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffe
     //==============================================================================
     const int bufferLength = buffer.getNumSamples();
     const int delayBufferLength = mDelayBuffer.getNumSamples();
-    
+
     updateSineBuffer();
-    
+
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* dryChannelData = buffer.getWritePointer(channel);
@@ -249,6 +249,8 @@ void DaFlangeAudioProcessor::fetchDelayBuffer(
   ,const float* delayBufferData
 ){
     auto currentLFOSample = static_cast<float>(std::sin(currentAngle));
+    float currentTime = ((*mParameterTree.getRawParameterValue(FEEDBACK_ID) * 195.0f) + 30.0f);
+    float currentWidth = (*mParameterTree.getRawParameterValue(WIDTH_ID) * 0.2f) * *mParameterTree.getRawParameterValue(INTENSITY_ID);
     currentAngle += angleDelta;
     float delayTime = *mParameterTree.getRawParameterValue(TIME_ID) + ((*mParameterTree.getRawParameterValue(TIME_ID) * 0.05) * currentLFOSample);
     const int readPosition = static_cast<int> (delayBufferLength + mWritePosition - (mSampleRate * delayTime / 1000.0f)) % delayBufferLength;
@@ -285,6 +287,6 @@ void DaFlangeAudioProcessor::feedbackDelay(
 
 void DaFlangeAudioProcessor::updateSineBuffer()
 {
-    auto cyclesPerSample = *mParameterTree.getRawParameterValue(LFO_FREQUENCY_ID) / mSampleRate;
+    auto cyclesPerSample = (*mParameterTree.getRawParameterValue(INTENSITY_ID) * 1000.0f) / mSampleRate;
     angleDelta = cyclesPerSample * 2.0 * MathConstants<double>::pi;
 }
