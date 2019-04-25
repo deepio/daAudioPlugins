@@ -85,6 +85,10 @@
 			isa = PBXBuildFile;
 			fileRef = 1398B3C73F6B57C9082AC608;
 		};
+		08DA59B2BA299BEB83E1DCEA = {
+			isa = PBXBuildFile;
+			fileRef = A51BE1035030B46B49C012AB;
+		};
 		20D62383D167C4831295996A = {
 			isa = PBXBuildFile;
 			fileRef = 09C88D6CA047D4BE51C92533;
@@ -274,6 +278,13 @@
 			path = daVerb.vst3;
 			sourceTree = "BUILT_PRODUCTS_DIR";
 		};
+		3A0D060831B713621352EE55 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.jpeg;
+			name = bg.jpg;
+			path = ../../../../../../Desktop/bg.jpg;
+			sourceTree = "SOURCE_ROOT";
+		};
 		3E67B744E7E4FD98B9303EC7 = {
 			isa = PBXFileReference;
 			lastKnownFileType = file;
@@ -435,6 +446,13 @@
 			path = "../../JuceLibraryCode/include_juce_audio_processors.mm";
 			sourceTree = "SOURCE_ROOT";
 		};
+		A51BE1035030B46B49C012AB = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = BinaryData.cpp;
+			path = ../../JuceLibraryCode/BinaryData.cpp;
+			sourceTree = "SOURCE_ROOT";
+		};
 		A88DF5397663429E127F885F = {
 			isa = PBXFileReference;
 			lastKnownFileType = file;
@@ -554,6 +572,13 @@
 			path = "../../JuceLibraryCode/include_juce_gui_basics.mm";
 			sourceTree = "SOURCE_ROOT";
 		};
+		E31679C9FE639349E31CEFE5 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = BinaryData.h;
+			path = ../../JuceLibraryCode/BinaryData.h;
+			sourceTree = "SOURCE_ROOT";
+		};
 		E39F488B10AD16E2A51951C6 = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.objcpp;
@@ -622,6 +647,7 @@
 			children = (
 				048B8A13E239D27CD55EF7BC,
 				48ED0BB8FCFFA099C04F2C44,
+				3A0D060831B713621352EE55,
 				1398B3C73F6B57C9082AC608,
 				60910F8FDA8D8E063108BA65,
 			);
@@ -662,6 +688,8 @@
 			isa = PBXGroup;
 			children = (
 				C29C60F0A2902111F494BD92,
+				A51BE1035030B46B49C012AB,
+				E31679C9FE639349E31CEFE5,
 				09C88D6CA047D4BE51C92533,
 				F33C8B03E9BAADBC24C2F6CF,
 				F5623703E2FADC34A3E50709,
@@ -1489,6 +1517,7 @@
 			files = (
 				13541AF369FEF6839167B20F,
 				38A49696A07F6F3F449285E7,
+				08DA59B2BA299BEB83E1DCEA,
 				20D62383D167C4831295996A,
 				CB92B14BAEF724EE781EFDA7,
 				11C0F380C99D981417CBE9A0,
