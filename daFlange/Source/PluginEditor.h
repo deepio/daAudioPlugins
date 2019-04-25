@@ -26,6 +26,11 @@ public:
     void paint (Graphics&) override;
     void resized() override;
 
+    Slider timeSlider;
+    Label timeLabel;
+    
+    Slider lfoFrequencySlider;
+    Label lfoFrequencyLabel;
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.

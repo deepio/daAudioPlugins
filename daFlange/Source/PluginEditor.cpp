@@ -18,6 +18,28 @@ DaFlangeAudioProcessorEditor::DaFlangeAudioProcessorEditor (DaFlangeAudioProcess
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (400, 300);
+
+    const int sliderBoxWidth = 50;
+    const int sliderBoxHeight= 20;
+
+
+    addAndMakeVisible(timeSlider);
+    timeSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    timeSlider.setTextBoxStyle(Slider::TextBoxBelow, false, sliderBoxWidth, sliderBoxHeight);
+    addAndMakeVisible(timeLabel);
+    timeLabel.setText(TIME_NAME, dontSendNotification);
+    timeLabel.setJustificationType(Justification::centred);
+    timeLabel.attachToComponent(&timeSlider, false);
+    addAndMakeVisible(timeLabel);
+
+    addAndMakeVisible(lfoFrequencySlider);
+    lfoFrequencySlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    lfoFrequencySlider.setTextBoxStyle(Slider::TextBoxBelow, false, sliderBoxWidth, sliderBoxHeight);
+    addAndMakeVisible(lfoFrequencyLabel);
+    lfoFrequencyLabel.setText(LFO_FREQUENCY_NAME, dontSendNotification);
+    lfoFrequencyLabel.setJustificationType(Justification::centred);
+    lfoFrequencyLabel.attachToComponent(&lfoFrequencySlider, false);
+    addAndMakeVisible(lfoFrequencyLabel);
 }
 
 DaFlangeAudioProcessorEditor::~DaFlangeAudioProcessorEditor()
@@ -35,4 +57,8 @@ void DaFlangeAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
+    const int buttonSize = 80;
+    Rectangle<int> area(10, 30, getWidth(), getHeight() - 60);
+    timeSlider.setBounds(area.removeFromLeft(buttonSize));
+    lfoFrequencySlider.setBounds(area.removeFromLeft(buttonSize));
 }
