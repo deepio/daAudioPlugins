@@ -22,6 +22,7 @@ DaVerbAudioProcessorEditor::DaVerbAudioProcessorEditor (DaVerbAudioProcessor& p)
     addAndMakeVisible(roomSizeSlider);
     roomSizeSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     roomSizeSlider.setTextBoxStyle(Slider::TextBoxBelow, false, sliderBoxWidth, sliderBoxHeight);
+    roomSizeSlider.setColour(Slider::textBoxOutlineColourId, Colours::black);
     addAndMakeVisible(roomSizeLabel);
     roomSizeLabel.setText(ROOM_SIZE_NAME, dontSendNotification);
     roomSizeLabel.setColour(Label::textColourId, Colours::black);
@@ -32,6 +33,7 @@ DaVerbAudioProcessorEditor::DaVerbAudioProcessorEditor (DaVerbAudioProcessor& p)
     addAndMakeVisible(dampingSlider);
     dampingSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     dampingSlider.setTextBoxStyle(Slider::TextBoxBelow, false, sliderBoxWidth, sliderBoxHeight);
+    dampingSlider.setColour(Slider::textBoxOutlineColourId, Colours::black);
     addAndMakeVisible(dampingLabel);
     dampingLabel.setText(DAMPING_NAME, dontSendNotification);
     dampingLabel.setColour(Label::textColourId, Colours::black);
@@ -42,6 +44,7 @@ DaVerbAudioProcessorEditor::DaVerbAudioProcessorEditor (DaVerbAudioProcessor& p)
     addAndMakeVisible(widthSlider);
     widthSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     widthSlider.setTextBoxStyle(Slider::TextBoxBelow, false, sliderBoxWidth, sliderBoxHeight);
+    widthSlider.setColour(Slider::textBoxOutlineColourId, Colours::black);
     addAndMakeVisible(widthLabel);
     widthLabel.setText(WIDTH_NAME, dontSendNotification);
     widthLabel.setColour(Label::textColourId, Colours::black);
@@ -52,6 +55,7 @@ DaVerbAudioProcessorEditor::DaVerbAudioProcessorEditor (DaVerbAudioProcessor& p)
     addAndMakeVisible(wetLevelSlider);
     wetLevelSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     wetLevelSlider.setTextBoxStyle(Slider::TextBoxBelow, false, sliderBoxWidth, sliderBoxHeight);
+    wetLevelSlider.setColour(Slider::textBoxOutlineColourId, Colours::black);
     addAndMakeVisible(wetLevelLabel);
     wetLevelLabel.setText(WET_LEVEL_NAME, dontSendNotification);
     wetLevelLabel.setColour(Label::textColourId, Colours::black);
@@ -62,6 +66,7 @@ DaVerbAudioProcessorEditor::DaVerbAudioProcessorEditor (DaVerbAudioProcessor& p)
     addAndMakeVisible(dryLevelSlider);
     dryLevelSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     dryLevelSlider.setTextBoxStyle(Slider::TextBoxBelow, false, sliderBoxWidth, sliderBoxHeight);
+    dryLevelSlider.setColour(Slider::textBoxOutlineColourId, Colours::black);
     addAndMakeVisible(dryLevelLabel);
     dryLevelLabel.setText(DRY_LEVEL_NAME, dontSendNotification);
     dryLevelLabel.setColour(Label::textColourId, Colours::black);
@@ -69,11 +74,7 @@ DaVerbAudioProcessorEditor::DaVerbAudioProcessorEditor (DaVerbAudioProcessor& p)
     dryLevelLabel.attachToComponent(&dryLevelSlider, false);
     dryLevelAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.mParameterTree, DRY_LEVEL_ID, dryLevelSlider);
 
-//    getLookAndFeel().setColour(Slider::backgroundColourId, Colours::black);
-//    getLookAndFeel().setColour(Slider::rotarySliderFillColourId, Colours::white);
-//    getLookAndFeel().setColour(Slider::rotarySliderOutlineColourId, Colours::black);
     getLookAndFeel().setColour(Slider::thumbColourId, Colours::white);
-//    titleLabel.setColour (Label::textColourId, Colours::lightgreen);
 }
 
 DaVerbAudioProcessorEditor::~DaVerbAudioProcessorEditor()
