@@ -14,6 +14,11 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
+#define TIME_ID "timeValue"
+#define TIME_NAME "Time"
+#define LFO_FREQUENCY_ID "lfoFrequencyValue"
+#define LFO_FREQUENCY_NAME "LFO Frequency"
+
 //==============================================================================
 /**
 */
@@ -85,6 +90,8 @@ public:
     );
     
     //==============================================================================
+    AudioProcessorValueTreeState mParameterTree;
+    
     AudioBuffer<float> mDelayBuffer;
     int mSampleRate {44100};
     int mWritePosition {0};

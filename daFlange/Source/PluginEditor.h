@@ -28,9 +28,12 @@ public:
 
     Slider timeSlider;
     Label timeLabel;
+    std::unique_ptr <AudioProcessorValueTreeState::SliderAttachment> timeAttachment;
     
     Slider lfoFrequencySlider;
     Label lfoFrequencyLabel;
+    std::unique_ptr <AudioProcessorValueTreeState::SliderAttachment> lfoFrequencyAttachment;
+
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.

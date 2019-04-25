@@ -24,6 +24,11 @@ DaFlangeAudioProcessor::DaFlangeAudioProcessor()
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
                        )
+,mParameterTree(*this, nullptr, "flangerParameter",
+{
+    std::make_unique<AudioParameterFloat>(TIME_ID, TIME_NAME, 5.0f, 200.0f, 35.0f)
+    ,std::make_unique<AudioParameterFloat>(LFO_FREQUENCY_ID, LFO_FREQUENCY_NAME, 0.0f, 10.0f, 1.0f)
+})
 #endif
 {
 }
@@ -157,6 +162,8 @@ void DaFlangeAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffe
     
     mWritePosition += bufferLength;
     mWritePosition %= delayBufferLength;
+
+//    std::cout << *mParameterTree.getRawParameterValue(TIME_ID) << std::endl;
 }
 
 //==============================================================================

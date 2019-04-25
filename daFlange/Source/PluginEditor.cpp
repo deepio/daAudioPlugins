@@ -31,6 +31,7 @@ DaFlangeAudioProcessorEditor::DaFlangeAudioProcessorEditor (DaFlangeAudioProcess
     timeLabel.setJustificationType(Justification::centred);
     timeLabel.attachToComponent(&timeSlider, false);
     addAndMakeVisible(timeLabel);
+    timeAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.mParameterTree, TIME_ID, timeSlider);
 
     addAndMakeVisible(lfoFrequencySlider);
     lfoFrequencySlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
@@ -40,6 +41,8 @@ DaFlangeAudioProcessorEditor::DaFlangeAudioProcessorEditor (DaFlangeAudioProcess
     lfoFrequencyLabel.setJustificationType(Justification::centred);
     lfoFrequencyLabel.attachToComponent(&lfoFrequencySlider, false);
     addAndMakeVisible(lfoFrequencyLabel);
+    lfoFrequencyAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(processor.mParameterTree, LFO_FREQUENCY_ID, lfoFrequencySlider);
+
 }
 
 DaFlangeAudioProcessorEditor::~DaFlangeAudioProcessorEditor()
